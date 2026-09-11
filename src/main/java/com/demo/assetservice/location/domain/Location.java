@@ -1,5 +1,6 @@
 package com.demo.assetservice.location.domain;
 
+import com.demo.assetservice.kioskmm.domain.KioskMm;
 import com.demo.assetservice.vending.domain.VendingMachine;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
@@ -36,5 +37,9 @@ public class Location {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "location")
 	private List<VendingMachine> vendingMachines = new ArrayList<>();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "location")
+	private List<KioskMm> kioskMms = new ArrayList<>();
 
 }
