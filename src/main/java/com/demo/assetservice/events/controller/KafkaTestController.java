@@ -1,6 +1,6 @@
 package com.demo.assetservice.events.controller;
 
-import com.demo.assetservice.events.dto.PingEvent;
+import com.demo.events.avro.PingEvent;
 import com.demo.assetservice.events.producer.PingEventProducer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

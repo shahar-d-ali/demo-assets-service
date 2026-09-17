@@ -1,7 +1,7 @@
 package com.demo.assetservice.events.producer;
 
 import com.demo.assetservice.events.config.KafkaTopicConfig;
-import com.demo.assetservice.events.dto.PingEvent;
+import com.demo.events.avro.PingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,15 +22,16 @@ public class PingEventProducer {
     }
 
     public PingEvent sendPing(String message) {
-        PingEvent event = PingEvent.builder()
-                .id(UUID.randomUUID().toString())
-                .message(message != null ? message : "ping")
-                .sourceService("demo-assets-service")
-                .timestamp(Instant.now())
+        String id = UUID.randomUUID().toString();
+        PingEvent event = PingEvent.newBuilder()
+                .setId(id)
+                .setMessage(message != null ? message : "ping")
+                .setSourceService("demo-assets-service")
+                .setTimestamp(Instant.now())
                 .build();
 
         log.info("Publishing ping event to topic {}: {}", KafkaTopicConfig.PING_TOPIC, event);
-        kafkaTemplate.send(KafkaTopicConfig.PING_TOPIC, event.getId(), event);
+        kafkaTemplate.send(KafkaTopicConfig.PING_TOPIC, id, event);
         return event;
     }
 }
