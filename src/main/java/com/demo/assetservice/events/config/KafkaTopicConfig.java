@@ -9,8 +9,8 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     public static final String PING_TOPIC = "demo-ping-topic";
-    public static final String PING_KEY = "key-001";
-    public static final String PING_TOPIC_2 = "demo-ping-topic-2";
+    public static final String TRANSACTION_TOPIC = "transaction-events";
+    public static final String FRAUD_DETECTION_TOPIC = "fraud-detection-topic";
 
     @Bean
     public NewTopic pingTopic() {
@@ -21,13 +21,18 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic pingTopic2() {
-        return TopicBuilder.name(PING_TOPIC_2)
+    public NewTopic transactionTopic() {
+        return TopicBuilder.name(TRANSACTION_TOPIC)
                 .partitions(1)
                 .replicas(1)
                 .build();
     }
 
-    // Producer factory is auto-configured by Spring Boot from
-    // spring.kafka.producer.* properties (KafkaAvroSerializer + schema registry).
+    @Bean
+    public NewTopic fraudDetectionTopic() {
+        return TopicBuilder.name(FRAUD_DETECTION_TOPIC)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 }
