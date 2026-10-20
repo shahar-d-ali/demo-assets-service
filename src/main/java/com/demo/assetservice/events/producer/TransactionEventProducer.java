@@ -2,9 +2,10 @@ package com.demo.assetservice.events.producer;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
+import java.util.Set;
 
 import org.apache.avro.data.TimeConversions;
 import org.apache.avro.specific.SpecificData;
@@ -53,11 +54,15 @@ public class TransactionEventProducer {
                     .send(KafkaTopicConfig.TRANSACTION_TOPIC, transactionId, transaction)
                     .whenComplete((result, exception) -> {
                         if (exception != null) {
-                            log.error("Failed to send transaction {} to topic {}", transactionId,
-                                    KafkaTopicConfig.TRANSACTION_TOPIC, exception);
+                            log.error("Failed to send transaction {} to topic {} [amount={}, type={}]: {}",
+                                    transactionId,
+                                    KafkaTopicConfig.TRANSACTION_TOPIC, transaction.getAmount(), transaction.getType(),
+                                    exception.getMessage(), exception);
                         } else {
-                            log.info("Sent transaction {} to topic {}", transactionId,
-                                    KafkaTopicConfig.TRANSACTION_TOPIC);
+                            log.info("Sent transaction {} to topic {} [amount={}, type={}, accountId={}]",
+                                    transactionId,
+                                    KafkaTopicConfig.TRANSACTION_TOPIC, transaction.getAmount(), transaction.getType(),
+                                    transaction.getAccountId());
                         }
                     });
         }
@@ -69,6 +74,7 @@ public class TransactionEventProducer {
         int targetCount = count > 0 ? count : 100;
         List<Transaction> transactions = new ArrayList<>(targetCount);
         Random random = new Random();
+        Set<String> usedTxIds = new HashSet<>(targetCount);
 
         for (int i = 0; i < targetCount; i++) {
             // ~75% of transactions are suspicious (amount > 1000) to maximise fraud
@@ -84,9 +90,16 @@ public class TransactionEventProducer {
             double amount = Math.round(rawAmount * 100.0) / 100.0;
             String type = random.nextBoolean() ? "DEBIT" : "CREDIT";
 
+            String txId;
+            do {
+                txId = generateTransactionId(random);
+            } while (!usedTxIds.add(txId));
+
+            String accountId = generateAccountId(random);
+
             Transaction transaction = new Transaction(
-                    UUID.randomUUID().toString(),
-                    UUID.randomUUID().toString(),
+                    txId,
+                    accountId,
                     amount,
                     "USD",
                     type,
@@ -95,5 +108,28 @@ public class TransactionEventProducer {
             transactions.add(transaction);
         }
         return transactions;
+    }
+
+    private static final String ID_CHARS = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+
+    private static final List<String> DEFAULT_ACCOUNT_IDS = List.of(
+            "AC1001",
+            "AC1002",
+            "AC1003",
+            "AC1004",
+            "AC1005"
+    );
+
+    private String generateTransactionId(Random random) {
+        StringBuilder sb = new StringBuilder(6);
+        sb.append("TX");
+        for (int i = 0; i < 4; i++) {
+            sb.append(ID_CHARS.charAt(random.nextInt(ID_CHARS.length())));
+        }
+        return sb.toString();
+    }
+
+    private String generateAccountId(Random random) {
+        return DEFAULT_ACCOUNT_IDS.get(random.nextInt(DEFAULT_ACCOUNT_IDS.size()));
     }
 }

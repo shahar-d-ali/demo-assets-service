@@ -1,5 +1,9 @@
 package com.demo.assetservice.events.producer;
 
+// ============================================================================
+// DISABLED: Only fraud and transaction topic code should exist.
+// ============================================================================
+/*
 import com.demo.shared.events.dto.PingEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,3 +56,5 @@ class PingEventProducerTest {
         assertThrows(IllegalArgumentException.class, () -> producer.validateEvent(event));
     }
 }
+*/
+
