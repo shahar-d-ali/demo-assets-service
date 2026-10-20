@@ -1,5 +1,9 @@
 package com.demo.assetservice.events.producer;
 
+// ============================================================================
+// DISABLED: Only fraud and transaction topic code should exist.
+// ============================================================================
+/*
 import java.time.Instant;
 import java.util.UUID;
 
@@ -69,18 +73,11 @@ public class PingEventProducer {
         return event;
     }
 
-    /**
-     * Validates that the event strictly complies with the PingEvent.avsc schema:
-     * 1. Non-null instance check
-     * 2. Schema compatibility with PingEvent.getClassSchema()
-     * 3. Avro SpecificData.validate(schema, datum)
-     * 4. Presence and format checks for required fields (id, message,
-     * sourceService, timestamp)
-     *
-     * @param event the PingEvent to validate
-     * @throws IllegalArgumentException if the event is invalid or does not match
-     *                                  the Avro schema
-     */
+    // Validates that the event strictly complies with the PingEvent.avsc schema:
+    // 1. Non-null instance check
+    // 2. Schema compatibility with PingEvent.getClassSchema()
+    // 3. Avro SpecificData.validate(schema, datum)
+    // 4. Presence and format checks for required fields (id, message, sourceService, timestamp)
     public void validateEvent(PingEvent event) {
         if (event == null) {
             throw new IllegalArgumentException("Cannot send null PingEvent");
@@ -125,3 +122,5 @@ public class PingEventProducer {
         log.debug("PingEvent Avro schema validation passed for event id: {}", event.getId());
     }
 }
+*/
+
