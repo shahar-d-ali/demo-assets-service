@@ -1,9 +1,5 @@
 package com.demo.assetservice.events.producer;
 
-// ============================================================================
-// DISABLED: Only fraud and transaction topic code should exist.
-// ============================================================================
-/*
 import java.time.Instant;
 import java.util.UUID;
 
@@ -122,5 +118,4 @@ public class PingEventProducer {
         log.debug("PingEvent Avro schema validation passed for event id: {}", event.getId());
     }
 }
-*/
 
